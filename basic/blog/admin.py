@@ -63,17 +63,23 @@ class PostAdmin(admin.ModelAdmin):
     def add_view(self, request, form_url='', extra_context=None):
         blog_settings = Settings.get_current()
         tinymce_isactive = False
-        if blog_settings != None:
-            active_editor = blog_settings.active_editor
-        extra_context = { 'active_editor': active_editor }            
+        extra_context = {}
+        if blog_settings is not None:
+            extra_context.update({
+                'active_editor': blog_settings.active_editor,
+                'enable_inlines': blog_settings.enable_inlines
+            })
         return super(PostAdmin, self).add_view(request, form_url, extra_context)
         
     def change_view(self, request, object_id, extra_context=None):
         blog_settings = Settings.get_current()
         tinymce_isactive = False        
-        if blog_settings != None:
-            active_editor = blog_settings.active_editor
-        extra_context = { 'active_editor': active_editor }
+        extra_context = {}
+        if blog_settings is not None:
+            extra_context.update({
+                'active_editor': blog_settings.active_editor,
+                'enable_inlines': blog_settings.enable_inlines
+            })
         return super(PostAdmin, self).change_view(request, object_id, extra_context)
 
 class SettingsAdmin(admin.ModelAdmin):
@@ -82,7 +88,7 @@ class SettingsAdmin(admin.ModelAdmin):
             (None, {
                 'fields': ('site', 'author_name', 'copyright', 'about',
                         'rss_url', 'twitter_url', 'email_subscribe_url', 'page_size',
-                        'ping_google', 'disqus_shortname', 'active_editor','excerpt_length',)
+                        'ping_google', 'disqus_shortname', 'active_editor', 'enable_inlines', 'excerpt_length',)
             }),
             ('Meta options', {
                 'classes': ('collapse',),
